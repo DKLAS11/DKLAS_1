@@ -1,0 +1,1195 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>DKLAS · المنصة الأسطورية المتكاملة</title>
+    
+    <style>
+
+        /* ==================== الأساسيات ==================== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            background: #000000 !important;
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+            position: relative;
+        }
+        .real-star {
+            position: fixed;
+            background: white;
+            border-radius: 50%;
+            z-index: -1;
+            pointer-events: none;
+            animation: moveUpStars linear infinite;
+        }
+        @keyframes moveUpStars {
+            from { transform: translateY(105vh); }
+            to { transform: translateY(-10vh); }
+        }
+        .notification-area {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2000;
+            width: auto;
+            max-width: 90%;
+            text-align: center;
+            pointer-events: none;
+        }
+        .notification {
+            background: rgba(10, 20, 40, 0.95);
+            backdrop-filter: blur(10px);
+            border: 2px solid #ffd700;
+            border-radius: 60px;
+            padding: 12px 30px;
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            box-shadow: 0 0 30px gold;
+            margin-bottom: 10px;
+            animation: slideDown 0.3s ease;
+            pointer-events: auto;
+        }
+        @keyframes slideDown {
+            from { transform: translateY(-100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+            border: 1px solid rgba(255,255,255,0.2);
+            touch-action: manipulation;
+            display: inline-block;
+            text-align: center;
+        }
+        .btn:active { transform: scale(0.95); }
+        .btn:hover { box-shadow: 0 0 20px #ffd700; }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #ffd700;
+            color: #ffd700;
+        }
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+        .logo {
+            font-weight: bold;
+            background: linear-gradient(135deg, #fff, #ffd700, #fff);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+            animation: shine 4s linear infinite;
+            text-shadow: 0 0 50px rgba(255,215,0,0.5);
+            line-height: 1.2;
+        }
+        @keyframes shine {
+            to { background-position: 200% center; }
+        }
+        .container { width: 100%; padding: 20px; }
+        .landing {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 90vh;
+            text-align: center;
+        }
+        .landing .logo { font-size: 80px; margin-bottom: 20px; }
+        @media (max-width: 480px) {
+            .landing .logo { font-size: 60px; }
+        }
+        .landing .sub { font-size: 24px; color: #ccc; margin-bottom: 40px; }
+        .btn-group { display: flex; gap: 15px; justify-content: center; flex-wrap: wrap; }
+        .auth-box {
+            max-width: 400px;
+            margin: 50px auto;
+            background: rgba(10, 20, 40, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 35px;
+            border-radius: 40px;
+            border: 1px solid rgba(255,215,0,0.3);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+        }
+        .auth-box h2 { font-size: 28px; }
+        @media (max-width: 480px) {
+            .auth-box h2 { font-size: 22px; }
+        }
+        .auth-box input {
+            width: 100%;
+            padding: 15px 20px;
+            margin: 10px 0;
+            border-radius: 50px;
+            background: rgba(255,255,255,0.05);
+            color: white;
+            border: 1px solid rgba(255,215,0,0.2);
+            outline: none;
+        }
+        .main-app { display: none; }
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            border-radius: 50px;
+            border: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 20px;
+        }
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            background: rgba(255, 215, 0, 0.2);
+            padding: 5px 15px 5px 10px;
+            border-radius: 40px;
+            border: 1px solid gold;
+        }
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #3a7bd5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            border: 2px solid gold;
+        }
+        .coins {
+            color: #ffd700;
+            font-weight: bold;
+            background: rgba(255,215,0,0.1);
+            padding: 5px 15px;
+            border-radius: 30px;
+            border: 1px solid gold;
+        }
+        .sections-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        .section-card {
+            background: rgba(20,30,50,0.7);
+            border-radius: 30px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: 0.3s;
+        }
+        .section-card:active { transform: scale(0.95); }
+        .section-icon img { width: 70px; height: 70px; object-fit: contain; margin-bottom: 10px; }
+        .section-title { font-size: 18px; font-weight: bold; }
+        .content-area {
+            background: rgba(10,20,40,0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 40px;
+            padding: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+            min-height: 500px;
+        }
+        .content-header {
+            font-size: 28px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 25px;
+            color: #ffd700;
+            text-shadow: 0 0 15px gold;
+        }
+        .games-display-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 15px;
+        }
+        .game-item-card {
+            background: rgba(255,255,255,0.03);
+            border-radius: 25px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .game-item-img {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            margin-bottom: 10px;
+        }
+        .shop-wrapper { display: flex; flex-direction: column; gap: 20px; }
+        .shop-tabs-nav {
+            display: flex;
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 5px;
+            gap: 5px;
+        }
+        .shop-tab-trigger {
+            flex: 1;
+            padding: 12px;
+            border-radius: 15px;
+            background: transparent;
+            color: #aaa;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .shop-tab-trigger.active {
+            background: #ffd700;
+            color: #000;
+        }
+        .sub-filter-bar {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding: 5px 0;
+            scrollbar-width: none;
+        }
+        .sub-filter-bar::-webkit-scrollbar { display: none; }
+        .filter-node {
+            background: rgba(255,255,255,0.1);
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-size: 13px;
+            white-space: nowrap;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .filter-node.active {
+            border-color: #ffd700;
+            color: #ffd700;
+            background: rgba(255,215,0,0.1);
+        }
+        .products-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        .p-card {
+            background: rgba(255,255,255,0.04);
+            border-radius: 25px;
+            padding: 15px;
+            border: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+            position: relative;
+            transition: 0.3s;
+        }
+        .p-image-box {
+            width: 100%;
+            height: 90px;
+            border-radius: 15px;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+        .p-title-text { font-size: 14px; font-weight: bold; color: #fff; margin-bottom: 5px; }
+        .p-info-text { font-size: 10px; color: #aaa; height: 30px; overflow: hidden; line-height: 1.2; }
+        .p-price-tag { color: #ffd700; font-size: 14px; font-weight: bold; margin: 10px 0; }
+        .real-category-block { margin-bottom: 30px; }
+        .real-category-title {
+            border-right: 4px solid #ffd700;
+            padding-right: 12px;
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+        .under-construction {
+            text-align: center;
+            padding: 40px;
+            color: gold;
+            font-size: 24px;
+            background: rgba(255,215,0,0.1);
+            border-radius: 30px;
+        }
+        .ai-zone { display: flex; flex-direction: column; height: 450px; }
+        .ai-logs { flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 10px; }
+        .bubble { padding: 12px 18px; border-radius: 20px; font-size: 14px; max-width: 85%; }
+        .bot-bubble { background: #3a4b7d; align-self: flex-start; border-bottom-right-radius: 5px; }
+        .user-bubble { background: rgba(255,215,0,0.2); border: 1px solid gold; align-self: flex-end; border-bottom-left-radius: 5px; }
+        /* تحسينات المخزن */
+        .file-box {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .file-card {
+            background: rgba(20,30,50,0.8);
+            border-radius: 20px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid #444;
+            position: relative;
+        }
+        .file-icon { font-size: 40px; margin-bottom: 8px; }
+        .file-name { font-size: 12px; word-break: break-word; margin-bottom: 8px; }
+        .file-actions {
+            display: flex;
+            gap: 5px;
+            justify-content: center;
+            margin-top: 8px;
+        }
+        .file-action-btn {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid gold;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 10px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .file-action-btn:hover { background: rgba(255,215,0,0.3); }
+        .file-delete {
+            background: rgba(255,0,0,0.2);
+            border: 1px solid red;
+        }
+        .file-image-preview {
+            width: 100%;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            cursor: pointer;
+        }
+        /* نهاية تحسينات المخزن */
+        /* صفحة نهاية اللعبة - بسيطة ونظيفة */
+        .game-end-screen {
+            text-align: center;
+            padding: 20px;
+            border-radius: 40px;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .game-end-win {
+            background: rgba(0, 100, 0, 0.7);
+            border: 3px solid #00ff00;
+            box-shadow: 0 0 30px green;
+        }
+        .game-end-lose {
+            background: rgba(100, 0, 0, 0.7);
+            border: 3px solid red;
+            box-shadow: 0 0 30px red;
+        }
+        .game-end-icon { font-size: 100px; margin-bottom: 20px; }
+        .game-end-title { font-size: 48px; font-weight: bold; margin-bottom: 20px; }
+        .game-end-rewards {
+            background: rgba(255,215,0,0.15);
+            border-radius: 30px;
+            padding: 20px;
+            margin: 20px 0;
+            font-size: 28px;
+        }
+        .game-end-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        .profile-section { margin-bottom: 30px; }
+        .profile-section-title {
+            font-size: 24px;
+            color: gold;
+            border-bottom: 2px solid gold;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        .stat-card {
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            padding: 15px;
+        }
+        .stat-card-title { font-size: 16px; color: #aaa; margin-bottom: 10px; }
+        .stat-card-value { font-size: 24px; font-weight: bold; color: gold; }
+        .stat-sub { font-size: 12px; color: #888; margin-top: 5px; }
+        .ownership-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .owned-item {
+            background: rgba(255,215,0,0.1);
+            border: 1px solid gold;
+            border-radius: 15px;
+            padding: 8px;
+            text-align: center;
+            cursor: pointer;
+        }
+        .owned-item-img {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 5px;
+        }
+        .owned-item-name { font-size: 10px; word-break: break-word; }
+        .item-detail-modal {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #1a1a2e;
+            border: 2px solid gold;
+            border-radius: 30px;
+            padding: 25px;
+            z-index: 3000;
+            width: 80%;
+            max-width: 300px;
+            text-align: center;
+        }
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 2999;
+        }
+        .hidden { display: none; }
+        @media (min-width: 992px) {
+            .sections-grid { grid-template-columns: repeat(4, 1fr); }
+            .products-container { grid-template-columns: repeat(4, 1fr); }
+            .games-display-grid { grid-template-columns: repeat(4, 1fr); }
+            .file-box { grid-template-columns: repeat(4, 1fr); }
+            .stats-grid { grid-template-columns: repeat(4, 1fr); }
+            .ownership-grid { grid-template-columns: repeat(5, 1fr); }
+        }
+/* تنسيق خاص لتصغير صور المنتجات في المتجر */
+.p-image-box {
+    width: 100% !important;   /* تأخذ عرض الكارد */
+    height: 120px !important; /* قمنا بتحديد ارتفاع ثابت (يمكنك تغييره لـ 100px إذا أردتها أصغر) */
+    object-fit: contain !important; /* لضمان ظهور الصورة كاملة بدون قص */
+    background: rgba(0, 0, 0, 0.2); /* خلفية خفيفة خلف الصورة */
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+/* تصغير كروت المنتجات نفسها لتناسب الشاشة بشكل أفضل */
+.p-card {
+    padding: 10px !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+    </style>
+</head>
+<body>
+    <div id="notificationArea" class="notification-area"></div>
+    <div id="landingPage" class="container landing">
+        <div class="logo">DKLAS</div>
+        <div class="sub">منصتك الالكترونية الشاملة بدون انترنت</div>
+        <div class="btn-group">
+            <button class="btn" onclick="navigation.to('login')">تسجيل الدخول</button>
+            <button class="btn btn-outline" onclick="navigation.to('register')">إنشاء حساب جديد</button>
+        </div>
+    </div>
+    <div id="loginPage" class="container" style="display:none;">
+        <div class="auth-box">
+            <h2 style="text-align: center; margin-bottom: 25px; color: #ffd700;">مرحباً بعودتك</h2>
+            <input type="text" id="loginUser" placeholder="اسم المستخدم">
+            <input type="password" id="loginPass" placeholder="كلمة المرور">
+            <button class="btn" style="width: 100%; margin-top: 15px;" onclick="auth.login()">تسجيل الدخول</button>
+            <div style="text-align: center; margin-top: 20px; color: #888; cursor: pointer;" onclick="navigation.to('landing')">الرجوع للرئيسية</div>
+        </div>
+    </div>
+    <div id="registerPage" class="container" style="display:none;">
+        <div class="auth-box">
+            <h2 style="text-align: center; margin-bottom: 25px; color: #ffd700;">حساب جديد</h2>
+            <input type="text" id="regUser" placeholder=" اسم مستخدم">
+            <input type="email" id="regEmail" placeholder="البريد الإلكتروني">
+            <input type="password" id="regPass" placeholder="كلمة المرور ">
+            <button class="btn" style="width: 100%; margin-top: 15px;" onclick="auth.register()">تأكيد الحساب</button>
+            <div style="text-align: center; margin-top: 20px; color: #888; cursor: pointer;" onclick="navigation.to('landing')">الرجوع للرئيسية</div>
+        </div>
+    </div>
+    <div id="mainApp" class="container main-app">
+        <nav class="navbar">
+            <div class="user-info" onclick="ui.showProfile()">
+            <div class="avatar" id="avatarDisplay" onclick="document.getElementById('avatarInput').click()" style="cursor: pointer; overflow: hidden;">👤</div>
+<input type="file" id="avatarInput" style="display:none" accept="image/*" onchange="logic.changeAvatar(this)">
+                <div>
+                    <span id="navUsername" style="display: block; font-weight: bold;">الأسطورة</span>
+                    <span id="navLevel" class="level-badge" style="font-size: 10px; opacity: 0.7;">المستوى 1</span>
+                </div>
+            </div>
+            <div class="coins">🪙 <span id="navCoins">0</span></div>
+        </nav>
+        <div style="text-align: center; margin: 20px 0;">
+            <div class="logo" style="font-size: 60px;">DKLAS</div>
+        </div>
+        <div class="sections-grid">
+            <div class="section-card" onclick="ui.renderSection('games')">
+                <div class="section-icon"><img src="IMAGES/game.webp" alt="Games"></div>
+                <div class="section-title">الألعاب</div>
+            </div>
+            <div class="section-card" onclick="ui.renderSection('ai')">
+                <div class="section-icon"><img src="IMAGES/ai.webp" alt="AI"></div>
+                <div class="section-title">D-BOT</div>
+            </div>
+            <div class="section-card" onclick="ui.renderSection('storage')">
+                <div class="section-icon"><img src="IMAGES/folder.webp" alt="Storage"></div>
+                <div class="section-title">المخزن</div>
+            </div>
+            <div class="section-card" onclick="ui.renderSection('shop')">
+                <div class="section-icon"><img src="IMAGES/cart.webp" alt="Shop"></div>
+                <div class="section-title">المتجر</div>
+            </div>
+        </div>
+        <div class="content-area" id="mainDisplay">
+            <div class="content-header" id="displayTitle">أهلاً بك</div>
+            <div id="displayBody"><p style="text-align: center; color: #888;">اختر قسماً من الأعلى للبدء..</p></div>
+        </div>
+    </div>
+    <div id="itemDetailModal" class="hidden">
+        <div class="modal-overlay" onclick="ui.hideItemDetail()"></div>
+        <div class="item-detail-modal">
+            <img id="detailImg" src="" style="width:100px; height:100px; object-fit:cover; border-radius:20px; margin-bottom:10px;">
+            <div id="detailName" style="font-size:20px; font-weight:bold; color:gold;"></div>
+            <div id="detailDesc" style="margin:10px 0; color:#aaa;"></div>
+            <div id="detailPrice" style="color:#fff;">تم الشراء بـ: 🪙 <span id="detailPriceSpan"></span></div>
+            <button class="btn" style="margin-top:20px;" onclick="ui.hideItemDetail()">إغلاق</button>
+        </div>
+    </div>
+
+    <script>
+        // ==================== الحالة الأساسية ====================
+        let state = {
+            users: JSON.parse(localStorage.getItem('dklas_db')) || [],
+            currentUser: null,
+            currentShopTab: 'trophy',
+            currentFilter: 'all',
+            viewingItem: null
+        };
+
+        // تأكد من أن كل مستخدم لديه الإحصائيات والمصفوفات اللازمة
+        state.users = state.users.map(user => {
+            if (!user.stats) {
+                user.stats = {
+                    xo: { wins: 0, losses: 0, plays: 0, coinsEarned: 0 },
+                    rps: { wins: 0, losses: 0, plays: 0, coinsEarned: 0 },
+                    memory: { wins: 0, losses: 0, plays: 0, coinsEarned: 0 },
+                    guess: { wins: 0, losses: 0, plays: 0, coinsEarned: 0 }
+                };
+            }
+            if (!user.inventory) user.inventory = [];
+            if (!user.files) user.files = [];
+            return user;
+        });
+        localStorage.setItem('dklas_db', JSON.stringify(state.users));
+
+        // ==================== التنقل ====================
+        const navigation = {
+            to: function(pageId) {
+                const pages = ['landingPage', 'loginPage', 'registerPage', 'mainApp'];
+                pages.forEach(p => document.getElementById(p).style.display = 'none');
+                if (pageId === 'landing') document.getElementById('landingPage').style.display = 'flex';
+                else if (pageId === 'login') document.getElementById('loginPage').style.display = 'block';
+                else if (pageId === 'register') document.getElementById('registerPage').style.display = 'block';
+                else if (pageId === 'app') document.getElementById('mainApp').style.display = 'block';
+                window.scrollTo(0,0);
+            }
+        };
+
+        // ==================== المصادقة ====================
+        const auth = {
+                        register:function() {
+                const u = document.getElementById('regUser').value.trim();
+                const e = document.getElementById('regEmail').value.trim();
+                const p = document.getElementById('regPass').value.trim();
+
+                // التحقق أن الإيميل Gmail وبالإنجليزية فقط
+                const emailRegex = /^[a-zA-Z0-9._%+-]+@gmail\.com$/; 
+                // التحقق أن الرمز 8 خانات على الأقل (أحرف إنجليزية وأرقام فقط)
+                const passRegex = /^[a-zA-Z0-9]{8,}$/; 
+
+                if(!u || !p || !e) return ui.notify("يرجى تعبئة كافة الحقول!");
+
+                // تطبيق الشروط الجديدة
+                if (!emailRegex.test(e)) {
+                    return ui.notify("خطأ: البريد يجب أن يكون Gmail وبالإنجليزية فقط!");
+                }
+                if (!passRegex.test(p)) {
+                    return ui.notify("خطأ: الرمز 8 خانات على الأقل (أحرف إنجليزية وأرقام فقط)!");
+                }
+
+                if(state.users.find(x => x.username === u)) return ui.notify("اسم المستخدم موجود مسبقاً");
+                
+                const newUser = {
+                    username: u, email: e, password: p, coins: 0, level: 1, xp: 0,
+                    inventory: [], files: [],
+                    stats: { xo: { wins:0, losses:0, plays:0, coinsEarned:0 },
+                             rps: { wins:0, losses:0, plays:0, coinsEarned:0 },
+                             memory: { wins:0, losses:0, plays:0, coinsEarned:0 },
+                             guess: { wins:0, losses:0, plays:0, coinsEarned:0 } }
+                };
+                state.users.push(newUser);
+                localStorage.setItem('dklas_db', JSON.stringify(state.users));
+                ui.notify("تم إنشاء حسابك بنجاح!");
+                navigation.to('login');
+            },
+
+            login: function() {
+                const u = document.getElementById('loginUser').value.trim();
+                const p = document.getElementById('loginPass').value.trim();
+                const user = state.users.find(x => x.username === u && x.password === p);
+                if(!user) return ui.notify("خطأ في الاسم أو كلمة المرور");
+                state.currentUser = user;
+                this.updateSession();
+                navigation.to('app');
+                ui.renderSection('games');
+                ui.notify(`مرحباً بك ${u}`);
+            },
+            updateSession: function() {
+                document.getElementById('navUsername').innerText = state.currentUser.username;
+                document.getElementById('navCoins').innerText = state.currentUser.coins;
+                document.getElementById('navLevel').innerText = "المستوى " + state.currentUser.level;
+                document.getElementById('avatarDisplay').innerText = state.currentUser.avatar || '👤';
+            },
+            save: function() {
+                const idx = state.users.findIndex(x => x.username === state.currentUser.username);
+                if (idx !== -1) {
+                    state.users[idx] = state.currentUser;
+                    localStorage.setItem('dklas_db', JSON.stringify(state.users));
+                }
+                this.updateSession();
+            }
+        };
+
+        // ==================== واجهة المستخدم ====================
+        const ui = {
+            notify: function(msg) {
+                const area = document.getElementById('notificationArea');
+                const n = document.createElement('div');
+                n.className = 'notification';
+                n.innerText = msg;
+                area.appendChild(n);
+                setTimeout(() => n.remove(), 3000);
+            },
+            renderSection: function(sec) {
+                const body = document.getElementById('displayBody');
+                const title = document.getElementById('displayTitle');
+                if (sec === 'games') {
+                    title.innerText = "صالة الألعاب 🎮";
+                    body.innerHTML = `
+                        <div class="games-display-grid">
+                            ${this.getGameCard('XO تحدي', 'IMAGES/xo.webp', 'game_xo()')}
+                            ${this.getGameCard('حجرة ورقة مقص', 'IMAGES/rps.webp', 'game_rps()')}
+                            ${this.getGameCard('الذاكرة الفضائية', 'IMAGES/cards.webp', 'game_memory()')}
+                            ${this.getGameCard('تخمين الأرقام', 'IMAGES/1-100.webp', 'game_guess()')}
+                        </div>
+                    `;
+                } else if (sec === 'shop') {
+                    title.innerText = "المتجر الملكي 🛒";
+                    this.renderShop();
+                } else if (sec === 'ai') {
+                    title.innerText = "D-BOT الذكي 🤖";
+                    body.innerHTML = `
+                        <div class="ai-zone">
+                            <div class="ai-logs" id="aiLogs"><div class="bubble bot-bubble">مرحباً! أنا D-BOT، كيف يمكنني مساعدتك اليوم؟</div></div>
+                            <div style="display:flex; gap:10px; margin-top:10px;">
+                                <input type="text" id="aiInp" placeholder="اسألني أي شيء.." style="flex:1; padding:12px; border-radius:30px; background:#222; border:1px solid #444; color:#fff;">
+                                <button class="btn" onclick="logic.askAI()">إرسال</button>
+                            </div>
+                        </div>
+                    `;
+                } else if (sec === 'storage') {
+                    title.innerText = "المخزن السحابي 📦";
+                    this.renderStorage();
+                }
+            },
+            getGameCard: function(name, img, func) {
+                return `<div class="game-item-card"><img src="${img}" class="game-item-img"><div style="font-size:14px; margin-bottom:10px;">${name}</div><button class="btn" style="width:100%; font-size:12px; padding:8px;" onclick="${func}">العب </button></div>`;
+            },
+            renderShop: function() {
+                const body = document.getElementById('displayBody');
+                body.innerHTML = `
+                    <div class="shop-wrapper">
+                        <div class="shop-tabs-nav">
+                            <button id="tabTrophy" class="shop-tab-trigger active" onclick="ui.switchShopTab('trophy')"> التروفي</button>
+                            <button id="tabReal" class="shop-tab-trigger" onclick="ui.switchShopTab('real')">الانماط</button>
+                        </div>
+                        <div id="shopContentArea"></div>
+                    </div>
+                `;
+                this.switchShopTab('trophy');
+            },
+            switchShopTab: function(tab) {
+                state.currentShopTab = tab;
+                document.getElementById('tabTrophy').classList.toggle('active', tab === 'trophy');
+                document.getElementById('tabReal').classList.toggle('active', tab === 'real');
+                const area = document.getElementById('shopContentArea');
+                if(tab === 'trophy') {
+                    area.innerHTML = `
+                        <div class="sub-filter-bar" id="filterBar">
+                            <div class="filter-node ${state.currentFilter === 'all' ? 'active' : ''}" onclick="ui.filterProducts('all')">الكل</div>
+                            <div class="filter-node ${state.currentFilter === 'cande' ? 'active' : ''}" onclick="ui.filterProducts('cande')">CANDE🍬</div>
+                            <div class="filter-node ${state.currentFilter === 'heavenly' ? 'active' : ''}" onclick="ui.filterProducts('heavenly')">HEAVENLY☁️</div>
+                            <div class="filter-node ${state.currentFilter === 'savage' ? 'active' : ''}" onclick="ui.filterProducts('savage')">SAVAGE🧟‍♀️</div>
+                            <div class="filter-node ${state.currentFilter === 'space' ? 'active' : ''}" onclick="ui.filterProducts('space')">SPACE👨‍🚀</div>
+                        </div>
+                        <div class="products-container" id="productsGrid"></div>
+                    `;
+                    this.filterProducts(state.currentFilter);
+                } else {
+                    area.innerHTML = `<div class="under-construction">🚧 هذا القسم قيد الإنشاء 🚧</div>`;
+                }
+            },
+            filterProducts: function(filterId) {
+                state.currentFilter = filterId;
+                const filterNodes = document.querySelectorAll('.filter-node');
+                filterNodes.forEach(node => {
+                    const onclickAttr = node.getAttribute('onclick');
+                    if (onclickAttr && onclickAttr.includes(`'${filterId}'`)) node.classList.add('active');
+                    else node.classList.remove('active');
+                });
+                const grid = document.getElementById('productsGrid');
+                if(!grid) return;
+                const allItems = [
+                    { id:1, name:"WRAPPED CANDY", desc:"حلوى مغلفة بورق ملون", price:200, img:"STORE/PLANETS/CANDY/Wrapped_candy.webp", cat:"cande" },
+                    { id:2, name:"JELLY", desc:"حلوى جيلاتينية طرية بنكهات الفاكهة", price:200, img: "STORE/PLANETS/CANDY/Jelly.webp", cat:"cande" },
+                    { id:3, name:"CROISSANT", desc:"معجنات هشة على شكل هلال", price:200, img:"STORE/PLANETS/CANDY/Croissant.webp", cat:"cande" },
+                    { id:4, name:"CREAM", desc:"كريمة حلوة لتزيين الحلويات", price:200, img:"STORE/PLANETS/CANDY/Cream.webp", cat:"cande" },
+                    { id:5, name:"COCOA", desc:"حلوى بطعم الكاكاو أو الشوكولاتة", price:200, img:"STORE/PLANETS/CANDY/Cocoa.webp", cat:"cande" },
+                    { id:6, name:"CHOCOLATE TRUFFLE", desc:"كرة شوكولاتة فاخرة بالكريمة", price:200, img:"STORE/PLANETS/CANDY/Chocolate_truffle.webp", cat:"cande" },
+                    { id:7, name:"CHOCOLATE CANDY", desc:"قطعة حلوى من الشوكولاتة", price:200, img:"STORE/PLANETS/CANDY/Chocolate_candy.webp", cat:"cande" },
+                    { id:8, name:"CANDY BALL", desc:"حلوى دائرية ملونة", price:200, img:"STORE/PLANETS/CANDY/Candy_ball.webp", cat:"cande" },
+                    { id:9, name:"CAKE", desc:"حلوى مخبوزة مزينة بالكريمة.", price:200, img:"STORE/PLANETS/CANDY/Cake.webp", cat:"cande" },
+                    { id:10, name:"TERRA BLOOM", desc:"مياه وسحب بيضاء مع ملامح طبيعية توحي بحياة نابضة", price:350, img:"STORE/PLANETS/HEAVENLY/Terra-Bloom.webp", cat:"heavenly" },
+                    { id:11, name:"SOLAR SWIRL", desc:"تدفقات برتقالية وزرقاء تلتف حول السطح مثل دوامات طاقة متحركة", price:350, img:"STORE/PLANETS/HEAVENLY/Solar-Swirl.webp", cat:"heavenly" },
+                    { id:12, name:"RING HALO", desc:"جسم أصفر صغير تحيط به حلقة خضراء لامعة تضيف مظهراً فضائياً مميزاً", price:350, img:"STORE/PLANETS/HEAVENLY/Ring-Halo.webp", cat:"heavenly" },
+                    { id:13, name:"PINK NOVA", desc:"كوكب وردي لامع بتشكيلات سائلة ناعمة تعطيه مظهراً حيوياً ومشرقاً", price:350, img:"STORE/PLANETS/HEAVENLY/Pink-Nova.webp", cat:"heavenly" },
+                    { id:14, name:"FROST CLOUD", desc:"كوكب جليدي أزرق تغطيه سحب متجمدة تدور بهدوء حول سطحه", price:350, img:"STORE/PLANETS/HEAVENLY/Frost-Cloud.webp", cat:"heavenly" },
+                    { id:15, name:"CRYSTAL CRUST", desc:"سطح فيروزي مليء ببلورات بنفسجية بارزة تعطيه شكلاً فريداً", price:350, img:"STORE/PLANETS/HEAVENLY/Crystal-Crust.webp", cat:"heavenly" },
+                    { id:16, name:"CRIMSON ROCK", desc:"كوكب أحمر خشن مكوّن من طبقات صخرية متشققة تشبه الحمم المتصلبة", price:350, img:"STORE/PLANETS/HEAVENLY/Crimson-Rock.webp", cat:"heavenly" },
+                    { id:17, name:"AQUA DRIFT", desc:"سطح بنفسجي هادئ تتدفق فوقه أنهار ومحيطات زرقاء بشكل متموج", price:350, img:"STORE/PLANETS/HEAVENLY/Aqua-Drift.webp", cat:"heavenly" },
+                    { id:18, name:"BLIGHTARA", desc:"جرم سماوي تتصارع فيه البحار الآسنة مع تضاريس أصابها العفن", price:700, img:"STORE/PLANETS/SAVAGE/Blightara.webp", cat:"savage" },
+                    { id:19, name:"CRYPTONOX", desc:"جرم ملتهب يشبه الأنسجة العضلية المحترقة والنابضة بالشر", price:700, img:"STORE/PLANETS/SAVAGE/Cryptonox.webp", cat:"savage" },
+                    { id:20, name:"DREADMORA", desc:"كتلة صخرية مظلمة مخنوقة بأحزمة من الغازات الذهبية السامة", price:700, img:"STORE/PLANETS/SAVAGE/Dreadmora.webp", cat:"savage" },
+                    { id:21, name:"GRAVEON", desc:"كوكب أرجواني كئيب تلتف حوله أبخرة المدافن السديمية", price:700, img:"STORE/PLANETS/SAVAGE/Graveon.webp", cat:"savage" },
+                    { id:22, name:"MORTRIX", desc:"كوكب غازي تضطرب فيه عواصف وردية تحمل أنفاس الموت", price:700, img:"STORE/PLANETS/SAVAGE/Mortrix.webp", cat:"savage" },
+                    { id:23, name:"NECROVIA", desc:"مقبرة فضائية وعرة تبرز منها نتوءات عظمية في أفق أرجواني", price:700, img:"STORE/PLANETS/SAVAGE/Necrovia.webp", cat:"savage" },
+                    { id:24, name:"PLAGORA", desc:"عالم دموي تغطيه تجاعيد وندوب ناتجة عن أوبئة كونية", price:700, img:"STORE/PLANETS/SAVAGE/Plagora.webp", cat:"savage" },
+                    { id:25, name:"ROTRON", desc:"كوكب متعفن يكسوه وهج أخضر طفيلي يقتات على المادة", price:700, img:"STORE/PLANETS/SAVAGE/Rotron.webp", cat:"savage" },
+                    { id:26, name:"ZOMBARA", desc:"سجن جليدي بارد تحيط به حلقة من حطام السفن المنسية", price:700, img:"STORE/PLANETS/SAVAGE/Zombara.webp", cat:"savage" },
+                    { id:27, name:"ZOMBION", desc:"عالم موبوء تبرز على سطحه بثرات خضراء تنفث السموم", price:700, img:"STORE/PLANETS/SAVAGE/Zombion.webp", cat:"savage" },
+                    { id:28, name:"ASTRONAUT", desc:"شخص يسافر إلى الفضاء ويستكشف الكواكب والنجوم باستخدام المركبات الفضائية", price:1000, img:"STORE/PLANETS/SPACE/Astronaut.webp", cat:"space" },
+                    { id:29, name:"ASTRO ROCK", desc:"رائد فضاء يحمل حجراً أو نيزكاً جمعه من الفضاء لدراسته", price:1000, img:"STORE/PLANETS/SPACE/Astro-Rock.webp", cat:"space" },
+                    { id:30, name:"ROCKET BASE", desc:"مكان مخصص لإطلاق الصواريخ والمركبات الفضائية نحو الفضاء", price:1000, img:"STORE/PLANETS/SPACE/Rocket-Base.webp", cat:"space" },
+                    { id:31, name:"SPACE TELESCOPE", desc:"جهاز يستخدم لرؤية النجوم والكواكب البعيدة في الفضاء", price:1000, img:"STORE/PLANETS/SPACE/Space-Telescope.webp", cat:"space" },
+                    { id:32, name:"STAR", desc:"جسم مضيء في الفضاء ينتج الضوء والحرارة مثل الشمس", price:1000, img:"STORE/PLANETS/SPACE/Star.webp", cat:"space" },
+                    { id:33, name:"NOVA PLANET", desc:"كوكب فضائي خيالي بعيد يتميز بألوان غريبة وبيئة غير معروفة", price:1000, img:"STORE/PLANETS/SPACE/Nova-Planet.webp", cat:"space" },
+                    { id:34, name:"SATELLITE", desc:"جهاز يدور حول الأرض لإرسال الصور والإشارات والاتصالات", price:1000, img:"STORE/PLANETS/SPACE/Satellite.webp", cat:"space" },
+                    { id:35, name:"SPACE RADAR", desc:"جهاز يكتشف الأجسام في الفضاء مثل الأقمار الصناعية والكويكبات", price:1000, img:"STORE/PLANETS/SPACE/Space-Radar.webp", cat:"space" },
+                    { id:36, name:"UFO", desc:"مركبة فضائية دائرية الشكل يُعتقد أنها تستخدم للسفر بين الكواكب", price:1000, img:"STORE/PLANETS/SPACE/UFO.webp", cat:"space" }
+                ];
+                let filtered = filterId === 'all' ? allItems : allItems.filter(x => x.cat === filterId);
+                grid.innerHTML = filtered.map(item => `
+                    <div class="p-card">
+                        <img src="${item.img}" class="p-image-box" onerror="this.src='https://via.placeholder.com/150/222/ffd700?text=DKLAS'">
+                        <div class="p-title-text">${item.name}</div>
+                        <div class="p-info-text">${item.desc}</div>
+                        <div class="p-price-tag">🪙 ${item.price}</div>
+                        <button class="btn" style="width:100%; font-size:12px; padding:10px;" onclick="logic.buyItem(${item.id}, ${item.price}, '${item.name}', '${item.img}', '${item.desc}', '${item.cat}')">امتلاك</button>
+                    </div>
+                `).join('');
+            },
+            renderStorage: function() {
+                const body = document.getElementById('displayBody');
+                body.innerHTML = `
+                    <div style="border:2px dashed #444; padding:30px; text-align:center; border-radius:20px; margin-bottom:20px;" onclick="document.getElementById('fInp').click()">
+                        <p>اضغط لرفع ملفاتك إلى سحابة DKLAS</p>
+                        <input type="file" id="fInp" style="display:none" onchange="logic.uploadFile(this)">
+                    </div>
+                    <div class="file-box" id="fileList"></div>
+                `;
+                this.updateFileList();
+            },
+            updateFileList: function() {
+                const list = document.getElementById('fileList');
+                if(!list || !state.currentUser || !state.currentUser.files) return;
+                list.innerHTML = state.currentUser.files.map((f, index) => {
+                    let icon = '📄', preview = '', viewBtn = '', downloadBtn = '';
+                    const isImage = f.type && f.type.startsWith('image/');
+                    
+                    if (isImage) {
+                        preview = `<img src="${f.data}" class="file-image-preview" onclick="window.open('${f.data}', '_blank')" title="اضغط للتكبير">`;
+                        icon = '';
+                        viewBtn = `<a href="${f.data}" target="_blank" class="file-action-btn">🔍 عرض</a>`;
+                        downloadBtn = `<a href="${f.data}" download="${f.name}" class="file-action-btn">⬇️ تحميل</a>`;
+                    } else {
+                        if (f.name.endsWith('.mp3') || f.name.endsWith('.wav')) icon = '🎵';
+                        else if (f.name.endsWith('.pdf')) icon = '📕';
+                        else if (f.name.endsWith('.txt')) icon = '📃';
+                        else if (f.name.endsWith('.zip') || f.name.endsWith('.rar')) icon = '📦';
+                        else icon = '📄';
+                        
+                        if (f.name.endsWith('.txt') && f.data) {
+                            viewBtn = `<a href="${f.data}" target="_blank" class="file-action-btn">🔍 عرض</a>`;
+                        } else if (f.data) {
+                            viewBtn = `<a href="${f.data}" target="_blank" class="file-action-btn">🔍 عرض</a>`;
+                        }
+                        downloadBtn = f.data ? `<a href="${f.data}" download="${f.name}" class="file-action-btn">⬇️ تحميل</a>` : '';
+                    }
+                    
+                    return `
+                        <div class="file-card">
+                            ${preview}
+                            <div class="file-icon">${icon}</div>
+                            <div class="file-name">${f.name}</div>
+                            <div class="file-actions">
+                                ${viewBtn}
+                                ${downloadBtn}
+                                <button class="file-action-btn file-delete" onclick="logic.deleteFile(${index})">🗑️ حذف</button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            },
+            // دالة نهاية اللعبة - تم إصلاح منطق المكافآت والأزرار
+            showGameEnd: function(isWin, gameName, coinsReward, xpReward, gameKey, retryFunctionName) {
+                const body = document.getElementById('displayBody');
+                const title = document.getElementById('displayTitle');
+                title.innerText = isWin ? '' : '';
+                
+                if (state.currentUser && state.currentUser.stats && state.currentUser.stats[gameKey]) {
+                    const stats = state.currentUser.stats[gameKey];
+                    stats.plays = (stats.plays || 0) + 1;
+                    if (isWin) {
+                        stats.wins = (stats.wins || 0) + 1;
+                        stats.coinsEarned = (stats.coinsEarned || 0) + coinsReward;
+                        state.currentUser.coins += coinsReward;
+                        state.currentUser.xp = (state.currentUser.xp || 0) + xpReward;
+                        if (state.currentUser.xp >= 100) { state.currentUser.level++; state.currentUser.xp -= 100; }
+                    } else {
+                        stats.losses = (stats.losses || 0) + 1;
+                    }
+                    auth.save();
+                }
+                
+                const winContent = `
+                    <div class="game-end-screen game-end-win">
+                        <div class="game-end-icon">🏆</div>
+                        <div class="game-end-title">فوز!</div>
+                        <div class="game-end-rewards">🪙 +${coinsReward} عملة | ✨ +${xpReward} XP</div>
+                        <div class="game-end-buttons">
+                            <button class="btn" onclick="${retryFunctionName}()">🔄 إعادة اللعب</button>
+                            <button class="btn btn-outline" onclick="ui.renderSection('games')">🏠 الرئيسية</button>
+                        </div>
+                    </div>
+                `;
+                const loseContent = `
+                    <div class="game-end-screen game-end-lose">
+                        <div class="game-end-icon">💔</div>
+                        <div class="game-end-title">للأسف خسرت</div>
+                        <p style="margin-bottom:20px;">لا يوجد مكافآت في حالة الخسارة</p>
+                        <div class="game-end-buttons">
+                            <button class="btn" onclick="${retryFunctionName}()">🔄 إعادة اللعب</button>
+                            <button class="btn btn-outline" onclick="ui.renderSection('games')">🏠 الرئيسية</button>
+                        </div>
+                    </div>
+                `;
+                body.innerHTML = isWin ? winContent : loseContent;
+            },
+            showProfile: function() {
+                if (!state.currentUser) { ui.notify("يجب تسجيل الدخول أولاً"); return; }
+                const title = document.getElementById('displayTitle');
+                const body = document.getElementById('displayBody');
+                title.innerText = 'الملف الشخصي 👤';
+                const user = state.currentUser;
+                const stats = user.stats || { xo:{wins:0,losses:0,plays:0,coinsEarned:0}, rps:{wins:0,losses:0,plays:0,coinsEarned:0}, memory:{wins:0,losses:0,plays:0,coinsEarned:0}, guess:{wins:0,losses:0,plays:0,coinsEarned:0} };
+                let html = `<div class="profile-section"><div class="profile-section-title">الإحصائيات</div><div class="stats-grid">`;
+                html += `<div class="stat-card"><div class="stat-card-title">XO</div><div class="stat-card-value">${stats.xo.wins} فوز</div><div class="stat-sub">خسارة: ${stats.xo.losses} | لعب: ${stats.xo.plays} | عملات: ${stats.xo.coinsEarned}</div></div>`;
+                html += `<div class="stat-card"><div class="stat-card-title">حجرة ورقة مقص</div><div class="stat-card-value">${stats.rps.wins} فوز</div><div class="stat-sub">خسارة: ${stats.rps.losses} | لعب: ${stats.rps.plays} | عملات: ${stats.rps.coinsEarned}</div></div>`;
+                html += `<div class="stat-card"><div class="stat-card-title">الذاكرة الفضائية</div><div class="stat-card-value">${stats.memory.wins} فوز</div><div class="stat-sub">خسارة: ${stats.memory.losses} | لعب: ${stats.memory.plays} | عملات: ${stats.memory.coinsEarned}</div></div>`;
+                html += `<div class="stat-card"><div class="stat-card-title">تخمين الأرقام</div><div class="stat-card-value">${stats.guess.wins} فوز</div><div class="stat-sub">خسارة: ${stats.guess.losses} | لعب: ${stats.guess.plays} | عملات: ${stats.guess.coinsEarned}</div></div>`;
+                html += `</div></div><div class="profile-section"><div class="profile-section-title">الممتلكات</div>`;
+                if (user.inventory && user.inventory.length > 0) {
+                    const trophyItems = user.inventory.filter(item => item.cat && item.cat !== 'real');
+                    const realItems = user.inventory.filter(item => item.cat === 'real');
+                    if (trophyItems.length > 0) {
+                        html += `<div style="margin-bottom:15px;"><h3 style="color:gold;"> التروفي</h3>`;
+                        ['cande','heavenly','savage','space'].forEach(cat => {
+                            const items = trophyItems.filter(item => item.cat === cat);
+                            if (items.length > 0) {
+                                html += `<div style="margin:10px 0;"><span style="color:#aaa;">${cat.toUpperCase()}</span><div class="ownership-grid">`;
+                                items.forEach(item => {
+                                    html += `<div class="owned-item" onclick="ui.showItemDetail('${item.id}')"><img src="${item.img}" class="owned-item-img" onerror="this.src='https://via.placeholder.com/50/222/ffd700?text=DKLAS'"><div class="owned-item-name">${item.name}</div></div>`;
+                                });
+                                html += `</div></div>`;
+                            }
+                        });
+                        html += `</div>`;
+                    }
+                    if (realItems.length > 0) {
+                        html += `<div><h3 style="color:gold;">الانماط</h3><div class="ownership-grid">`;
+                        realItems.forEach(item => {
+                            html += `<div class="owned-item" onclick="ui.showItemDetail('${item.id}')"><img src="${item.img}" class="owned-item-img" onerror="this.src='https://via.placeholder.com/50/222/ffd700?text=DKLAS'"><div class="owned-item-name">${item.name}</div></div>`;
+                        });
+                        html += `</div></div>`;
+                    }
+                } else {
+                    html += `<p style="text-align:center; color:#888;">لا تمتلك أي منتجات بعد</p>`;
+                }
+                html += `</div>`;
+                body.innerHTML = html;
+            },
+            showItemDetail: function(itemId) {
+                const item = state.currentUser.inventory.find(i => i.id == itemId);
+                if (!item) return;
+                document.getElementById('detailImg').src = item.img;
+                document.getElementById('detailName').innerText = item.name;
+                document.getElementById('detailDesc').innerText = item.desc || 'لا يوجد وصف';
+                document.getElementById('detailPriceSpan').innerText = item.price !== undefined ? item.price : '?';
+                document.getElementById('itemDetailModal').classList.remove('hidden');
+            },
+            hideItemDetail: function() { document.getElementById('itemDetailModal').classList.add('hidden'); }
+        };
+
+        // ==================== المنطق ====================
+        const logic = {
+            buyItem: function(id, price, name, img, desc, cat) {
+                if (!state.currentUser) return ui.notify("يجب تسجيل الدخول أولاً");
+                if(state.currentUser.coins < price) return ui.notify("لا تملك عملات كافية!");
+                state.currentUser.coins -= price;
+                if (!state.currentUser.inventory) state.currentUser.inventory = [];
+                state.currentUser.inventory.push({id, name, img, desc, price, cat});
+                auth.save();
+                ui.notify(`مبروك! تمت إضافة [${name}] إلى حسابك.`);
+            },
+            uploadFile: function(input) {
+                if (!state.currentUser) return ui.notify("يجب تسجيل الدخول أولاً");
+                const file = input.files[0];
+                if(!file) return;
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const fileData = { name: file.name, type: file.type, data: e.target.result };
+                    if (!state.currentUser.files) state.currentUser.files = [];
+                    state.currentUser.files.push(fileData);
+                    auth.save(); ui.updateFileList(); ui.notify("تم رفع الملف بنجاح");
+                };
+                if (file.type.startsWith('image/') || file.type === 'text/plain' || file.name.endsWith('.txt')) {
+                    reader.readAsDataURL(file);
+                } else {
+                    state.currentUser.files.push({ name: file.name, type: file.type, data: null });
+                    auth.save(); ui.updateFileList(); ui.notify("تم رفع الملف بنجاح (بدون محتوى)");
+                }
+            },
+            deleteFile: function(index) {
+                if (!state.currentUser) return;
+                if (state.currentUser.files && state.currentUser.files[index]) {
+                    state.currentUser.files.splice(index, 1);
+                    auth.save(); ui.updateFileList(); ui.notify("تم حذف الملف");
+                }
+            },
+            askAI: async function() {
+                const inp = document.getElementById('aiInp');
+                const logs = document.getElementById('aiLogs');
+                const txt = inp.value.trim();
+                if(!txt) return;
+                logs.innerHTML += `<div class="bubble user-bubble">${txt}</div>`;
+                inp.value = '';
+                const botMsg = document.createElement('div');
+                botMsg.className = 'bubble bot-bubble';
+                botMsg.innerText = "جاري التفكير في إجابة ...";
+                logs.appendChild(botMsg);
+                logs.scrollTop = logs.scrollHeight;
+                try {
+                    const res = await fetch(`https://ar.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(txt)}`);
+                    const data = await res.json();
+                    botMsg.innerText = data.extract || "عذراً، لم أجد معلومات دقيقة حول هذا الموضوع في قاعدة بياناتي حالياً.";
+                } catch(e) { botMsg.innerText = "حدث خطأ في الاتصال بالسحابة الذكية."; }
+                logs.scrollTop = logs.scrollHeight;
+            }
+        };
+
+        // ==================== الألعاب ====================
+        function game_xo() {
+            let winsX = 0, winsO = 0;
+            let board = Array(9).fill(null);
+            let currentPlayer = 'X';
+            let gameActive = true;
+            const body = document.getElementById('displayBody');
+            body.innerHTML = `<div style="text-align:center; margin-bottom:20px;"><span style="color:gold;">X: <span id="xWins">0</span></span> | <span style="color:silver;">O: <span id="oWins">0</span></span></div><div id="xo_board" style="display:grid; grid-template-columns:repeat(3, 80px); gap:10px; justify-content:center; margin-top:10px;"></div>`;
+            const renderBoard = () => {
+                const grid = document.getElementById('xo_board');
+                if (!grid) return;
+                grid.innerHTML = '';
+                board.forEach((val, i) => {
+                    const cell = document.createElement('div');
+                    cell.style = "width:80px; height:80px; background:#222; border:1px solid gold; display:flex; align-items:center; justify-content:center; font-size:30px; border-radius:15px;";
+                    cell.innerText = val || '';
+                    cell.onclick = () => {
+                        if (!gameActive || board[i] || currentPlayer !== 'X') return;
+                        makeMove(i, 'X');
+                    };
+                    grid.appendChild(cell);
+                });
+            };
+            const makeMove = (index, player) => {
+                board[index] = player;
+                renderBoard();
+                const winner = checkWinner();
+                if (winner) {
+                    if (winner === 'X') winsX++; else winsO++;
+                    document.getElementById('xWins').innerText = winsX;
+                    document.getElementById('oWins').innerText = winsO;
+                    if (winsX === 2) { gameActive = false; ui.showGameEnd(true, "XO", 10, 20, 'xo', 'game_xo'); }
+                    else if (winsO === 2) { gameActive = false; ui.showGameEnd(false, "XO", 0, 0, 'xo', 'game_xo'); }
+                    else { board = Array(9).fill(null); currentPlayer = 'X'; renderBoard(); }
+                } else {
+                    if (!board.includes(null)) {
+                        board = Array(9).fill(null);
+                        currentPlayer = 'X';
+                        renderBoard();
+                    } else {
+                        currentPlayer = (currentPlayer === 'X') ? 'O' : 'X';
+                        if (currentPlayer === 'O' && gameActive) setTimeout(aiMove, 500);
+                    }
+                }
+            };
+            const aiMove = () => {
+                if (!gameActive) return;
+                let empty = board.map((v,i) => v===null?i:null).filter(v=>v!==null);
+                if (empty.length) makeMove(empty[Math.floor(Math.random()*empty.length)], 'O');
+            };
+            const checkWinner = () => {
+                const lines = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+                for(let [a,b,c] of lines) if(board[a] && board[a]===board[b] && board[a]===board[c]) return board[a];
+                return null;
+            };
+            renderBoard();
+        }
+
+        function game_rps() {
+            let userWins = 0, botWins = 0, round = 0;
+            const totalRounds = 5;
+            const body = document.getElementById('displayBody');
+            body.innerHTML = `
+                <div style="text-align:center;">
+                    <p style="margin-bottom:20px;">الجولة <span id="roundCounter">1</span> / 5</p>
+                    <div style="margin-bottom:10px;"><span style="color:gold;">أنت: <span id="userScore">0</span></span> | <span style="color:silver;">الخصم: <span id="botScore">0</span></span></div>
+                    <div class="btn-group">
+                        <button class="btn" onclick="playRPSRound('حجرة')">🧱 حجرة</button>
+                        <button class="btn" onclick="playRPSRound('ورقة')">📜 ورقة</button>
+                        <button class="btn" onclick="playRPSRound('مقص')">✂️ مقص</button>
+                    </div>
+                    <div id="rpsRes" style="margin-top:30px; font-size:16px; color:#aaa; max-height:150px; overflow-y:auto;"></div>
+                </div>
+            `;
+            window.playRPSRound = (user) => {
+                if (round >= totalRounds) return;
+                const options = ['حجرة', 'ورقة', 'مقص'];
+                const bot = options[Math.floor(Math.random()*3)];
+                let res = "";
+                if (user === bot) res = "تعادل!";
+                else if ((user==='حجرة' && bot==='مقص') || (user==='ورقة' && bot==='حجرة') || (user==='مقص' && bot==='ورقة')) {
+                    res = "فوز!"; userWins++;
+                } else { res = "خسارة!"; botWins++; }
+                round++;
+                document.getElementById('userScore').innerText = userWins;
+                document.getElementById('botScore').innerText = botWins;
+                if(round < totalRounds) document.getElementById('roundCounter').innerText = round + 1;
+                document.getElementById('rpsRes').innerHTML += `<div>الجولة ${round}: أنت ${user} ، الخصم ${bot} - ${res}</div>`;
+                if (round === totalRounds) {
+                    setTimeout(() => {
+                        if (userWins > botWins) ui.showGameEnd(true, "RPS", 5, 10, 'rps', 'game_rps');
+                        else ui.showGameEnd(false, "RPS", 0, 0, 'rps', 'game_rps');
+                    }, 800);
+                }
+            };
+        }
+
+        function game_memory() {
+            const attemptsMax = 50; let attemptsLeft = attemptsMax;
+            let cards = [], flippedCards = [], matched = [];
+            const spaceSymbols = ['🌍','🌕','🌟','☄️','🪐','🌠','🌌','👽','🛸','🔭','🚀','🌑'];
+            for (let i=0; i<12; i++) cards.push(spaceSymbols[i], spaceSymbols[i]);
+            cards = cards.sort(() => Math.random() - 0.5);
+            const body = document.getElementById('displayBody');
+            body.innerHTML = `<div style="text-align:center; margin-bottom:15px;"><span>محاولات متبقية: <span id="attemptsLeft">${attemptsLeft}</span> / ${attemptsMax}</span></div><div id="memoryBoard" style="display:grid; grid-template-columns:repeat(6, 1fr); gap:8px; max-width:500px; margin:auto;"></div>`;
+            const board = document.getElementById('memoryBoard');
+            const renderBoard = () => {
+                board.innerHTML = '';
+                for (let i=0; i<cards.length; i++) {
+                    const card = document.createElement('div');
+                    card.style = `aspect-ratio:1; background:${matched.includes(i) ? '#0a2a2a' : (flippedCards.includes(i) ? '#3a5a5a' : '#111')}; border:2px solid gold; border-radius:15px; display:flex; align-items:center; justify-content:center; font-size:24px; cursor:pointer; transition:0.3s;`;
+                    if (matched.includes(i) || flippedCards.includes(i)) card.innerText = cards[i];
+                    else card.innerText = '?';
+                    card.onclick = () => {
+                        if (matched.includes(i) || flippedCards.includes(i) || flippedCards.length === 2) return;
+                        flippedCards.push(i); renderBoard();
+                        if (flippedCards.length === 2) {
+                            attemptsLeft--; document.getElementById('attemptsLeft').innerText = attemptsLeft;
+                            if (cards[flippedCards[0]] === cards[flippedCards[1]]) {
+                                matched.push(flippedCards[0], flippedCards[1]); flippedCards = []; renderBoard();
+                                if (matched.length === cards.length) ui.showGameEnd(true, "Memory", 25, 50, 'memory', 'game_memory');
+                            } else { setTimeout(() => { flippedCards = []; renderBoard(); }, 800); }
+                            if (attemptsLeft <= 0 && matched.length < cards.length) ui.showGameEnd(false, "Memory", 0, 0, 'memory', 'game_memory');
+                        }
+                    };
+                    board.appendChild(card);
+                }
+            };
+            renderBoard();
+        }
+
+        function game_guess() {
+            let target = Math.floor(Math.random()*100)+1;
+            let attemptsLeft = 10;
+            const body = document.getElementById('displayBody');
+            body.innerHTML = `<div style="text-align:center;"><p>خمن الرقم بين 1 و 100</p><p>محاولات متبقية: <span id="attemptsLeft">${attemptsLeft}</span> / 10</p><input type="number" id="gInp" style="padding:10px; border-radius:10px; margin:20px 0; width:100px; background:#222; border:1px solid gold; color:white;"><br><button class="btn" onclick="checkGuess()">تخمين</button><p id="gHint" style="margin-top:20px; color:gold;"></p></div>`;
+            window.checkGuess = () => {
+                const val = parseInt(document.getElementById('gInp').value);
+                const hint = document.getElementById('gHint');
+                if (isNaN(val)) return ui.notify("أدخل رقماً");
+                attemptsLeft--; document.getElementById('attemptsLeft').innerText = attemptsLeft;
+                if (val === target) ui.showGameEnd(true, "Guess", 20, 30, 'guess', 'game_guess');
+                else if (attemptsLeft <= 0) ui.showGameEnd(false, "Guess", 0, 0, 'guess', 'game_guess');
+                else if (val > target) hint.innerText = "أصغر ! ⬇️";
+                else hint.innerText = "أكبر ! ⬆️";
+            };
+        }
+
+        // ==================== التهيئة ====================
+        function initGalaxy() {
+            for (let i=0; i<70; i++) {
+                const star = document.createElement('div');
+                star.className = 'real-star';
+                const size = Math.random()*2+1+'px';
+                star.style.width = size; star.style.height = size;
+                star.style.left = Math.random()*100+'vw';
+                star.style.animationDuration = Math.random()*15+10+'s';
+                star.style.animationDelay = Math.random()*-15+'s';
+                document.body.appendChild(star);
+            }
+        }
+        window.onload = () => { initGalaxy(); navigation.to('landing'); };
+    </script>
+</body>
+</html>
