@@ -22,9 +22,11 @@
             overflow-x: hidden;
             position: relative;
         }
+        
+        /* تأثير خلفية النجوم التفاعلية المحسن */
         .real-star {
             position: fixed;
-            background: white;
+            background: rgba(255, 255, 255, 0.8);
             border-radius: 50%;
             z-index: -1;
             pointer-events: none;
@@ -34,6 +36,14 @@
             from { transform: translateY(105vh); }
             to { transform: translateY(-10vh); }
         }
+        
+        /* إضافة تأثير النجوم التفاعلية (Interactive Stars) */
+        body.interactive-galaxy .real-star {
+            background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(255,215,0,0.4) 70%, rgba(255,215,0,0) 100%);
+            box-shadow: 0 0 5px rgba(255, 215, 0, 0.5);
+            transition: transform 0.2s ease-out; /* حركة هروب ناعمة للنجوم */
+        }
+
         .notification-area {
             position: fixed;
             top: 20px;
@@ -471,6 +481,19 @@
             z-index: 2999;
         }
         .hidden { display: none; }
+        
+        /* تأثيرات خاصة بالعملة المتطايرة */
+        .floating-coin {
+            position: fixed;
+            z-index: 3000; /* فوق كل شيء */
+            font-size: 24px;
+            pointer-events: none;
+            transition: all 0.8s cubic-bezier(0.19, 1, 0.22, 1); /* حركة انسيابية ناعمة */
+            opacity: 1;
+            transform: scale(1);
+            text-shadow: 0 0 10px gold; /* توهج ذهبي للعملة */
+        }
+
         @media (min-width: 992px) {
             .sections-grid { grid-template-columns: repeat(4, 1fr); }
             .products-container { grid-template-columns: repeat(4, 1fr); }
@@ -499,8 +522,7 @@
 
     </style>
 </head>
-<body>
-    <div id="notificationArea" class="notification-area"></div>
+<body class="interactive-galaxy"> <div id="notificationArea" class="notification-area"></div>
     <div id="landingPage" class="container landing">
         <div class="logo">DKLAS</div>
         <div class="sub">منصتك الالكترونية الشاملة بدون انترنت</div>
@@ -536,9 +558,12 @@
                 <div>
                     <span id="navUsername" style="display: block; font-weight: bold;">الأسطورة</span>
                     <span id="navLevel" class="level-badge" style="font-size: 10px; opacity: 0.7;">المستوى 1</span>
+                    <div style="width: 100px; height: 5px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,215,0,0.3); border-radius: 5px; margin-top: 4px; overflow: hidden;">
+                        <div id="xpBarFill" style="height: 100%; width: 0%; background: linear-gradient(90deg, #ffd700, #fff); transition: 0.5s;"></div>
+                    </div>
                 </div>
             </div>
-            <div class="coins">🪙 <span id="navCoins">0</span></div>
+            <div class="coins" id="navCoinsArea">🪙 <span id="navCoins">0</span></div>
         </nav>
         <div style="text-align: center; margin: 20px 0;">
             <div class="logo" style="font-size: 60px;">DKLAS</div>
@@ -666,10 +691,17 @@
                 ui.notify(`مرحباً بك ${u}`);
             },
             updateSession: function() {
+                if (!state.currentUser) return;
                 document.getElementById('navUsername').innerText = state.currentUser.username;
                 document.getElementById('navCoins').innerText = state.currentUser.coins;
                 document.getElementById('navLevel').innerText = "المستوى " + state.currentUser.level;
                 document.getElementById('avatarDisplay').innerText = state.currentUser.avatar || '👤';
+
+                // تحديث شريط الـ XP
+                const xpBar = document.getElementById('xpBarFill');
+                if (xpBar) {
+                    xpBar.style.width = (state.currentUser.xp || 0) + "%";
+                }
             },
             save: function() {
                 const idx = state.users.findIndex(x => x.username === state.currentUser.username);
@@ -810,8 +842,7 @@
                 ];
                 let filtered = filterId === 'all' ? allItems : allItems.filter(x => x.cat === filterId);
                 grid.innerHTML = filtered.map(item => `
-                    <div class="p-card">
-                        <img src="${item.img}" class="p-image-box" onerror="this.src='https://via.placeholder.com/150/222/ffd700?text=DKLAS'">
+                    <div class="p-card" id="product-${item.id}"> <img src="${item.img}" class="p-image-box" onerror="this.src='https://via.placeholder.com/150/222/ffd700?text=DKLAS'">
                         <div class="p-title-text">${item.name}</div>
                         <div class="p-info-text">${item.desc}</div>
                         <div class="p-price-tag">🪙 ${item.price}</div>
@@ -883,7 +914,12 @@
                     if (isWin) {
                         stats.wins = (stats.wins || 0) + 1;
                         stats.coinsEarned = (stats.coinsEarned || 0) + coinsReward;
-                        state.currentUser.coins += coinsReward;
+                        // تأخير إضافة العملات قليلاً حتى تنتهي حركة العملات
+                        setTimeout(() => {
+                            state.currentUser.coins += coinsReward;
+                            auth.save();
+                        }, 800);
+                        
                         state.currentUser.xp = (state.currentUser.xp || 0) + xpReward;
                         if (state.currentUser.xp >= 100) { state.currentUser.level++; state.currentUser.xp -= 100; }
                     } else {
@@ -894,8 +930,7 @@
                 
                 const winContent = `
                     <div class="game-end-screen game-end-win">
-                        <div class="game-end-icon">🏆</div>
-                        <div class="game-end-title">فوز!</div>
+                        <div class="game-end-icon" id="winIcon">🏆</div> <div class="game-end-title">فوز!</div>
                         <div class="game-end-rewards">🪙 +${coinsReward} عملة | ✨ +${xpReward} XP</div>
                         <div class="game-end-buttons">
                             <button class="btn" onclick="${retryFunctionName}()">🔄 إعادة اللعب</button>
@@ -915,6 +950,11 @@
                     </div>
                 `;
                 body.innerHTML = isWin ? winContent : loseContent;
+                
+                // تفعيل أنيميشن العملات عند الفوز
+                if (isWin && coinsReward > 0) {
+                    logic.animateCoins('win');
+                }
             },
             showProfile: function() {
                 if (!state.currentUser) { ui.notify("يجب تسجيل الدخول أولاً"); return; }
@@ -947,7 +987,7 @@
                         html += `</div>`;
                     }
                     if (realItems.length > 0) {
-                        html += `<div><h3 style="color:gold;">الانماط</h3><div class="ownership-grid">`;
+                        html += `<div><h3 style="color:gold;">انماط</h3><div class="ownership-grid">`;
                         realItems.forEach(item => {
                             html += `<div class="owned-item" onclick="ui.showItemDetail('${item.id}')"><img src="${item.img}" class="owned-item-img" onerror="this.src='https://via.placeholder.com/50/222/ffd700?text=DKLAS'"><div class="owned-item-name">${item.name}</div></div>`;
                         });
@@ -976,11 +1016,18 @@
             buyItem: function(id, price, name, img, desc, cat) {
                 if (!state.currentUser) return ui.notify("يجب تسجيل الدخول أولاً");
                 if(state.currentUser.coins < price) return ui.notify("لا تملك عملات كافية!");
-                state.currentUser.coins -= price;
-                if (!state.currentUser.inventory) state.currentUser.inventory = [];
-                state.currentUser.inventory.push({id, name, img, desc, price, cat});
-                auth.save();
-                ui.notify(`مبروك! تمت إضافة [${name}] إلى حسابك.`);
+                
+                // تشغيل أنيميشن طيران العملات من فوق (Navbar) لتحت (المنتج)
+                this.animateCoins('buy', id);
+                
+                // تأخير الخصم والحفظ حتى تنتهي الحركة
+                setTimeout(() => {
+                    state.currentUser.coins -= price;
+                    if (!state.currentUser.inventory) state.currentUser.inventory = [];
+                    state.currentUser.inventory.push({id, name, img, desc, price, cat});
+                    auth.save();
+                    ui.notify(`مبروك! تمت إضافة [${name}] إلى حسابك.`);
+                }, 800); // 800ms هي مدة الأنيميشن
             },
             uploadFile: function(input) {
                 if (!state.currentUser) return ui.notify("يجب تسجيل الدخول أولاً");
@@ -1025,6 +1072,67 @@
                     botMsg.innerText = data.extract || "عذراً، لم أجد معلومات دقيقة حول هذا الموضوع في قاعدة بياناتي حالياً.";
                 } catch(e) { botMsg.innerText = "حدث خطأ في الاتصال بالسحابة الذكية."; }
                 logs.scrollTop = logs.scrollHeight;
+            },
+            
+            // دالة الأنيميشن الرئيسية للعملات المتطايرة
+            animateCoins: function(type, productId) {
+                // عدد العملات التي ستطير (لإعطاء تأثير كثافة)
+                const numCoins = type === 'win' ? 10 : 5; 
+                
+                // تحديد عنصر البداية والنهاية بناءً على نوع الحركة
+                let startEl, endEl;
+                
+                if (type === 'buy') {
+                    // من الـ Navbar (فوق) للكارت (تحت)
+                    startEl = document.getElementById('navCoinsArea');
+                    endEl = document.getElementById('product-' + productId);
+                } else {
+                    // من شاشة الفوز (تحت) للـ Navbar (فوق)
+                    startEl = document.getElementById('winIcon'); 
+                    endEl = document.getElementById('navCoinsArea');
+                }
+                
+                if (!startEl || !endEl) return; // حماية في حال عدم وجود العناصر
+
+                // الحصول على إحداثيات العناصر في الشاشة
+                const startRect = startEl.getBoundingClientRect();
+                const endRect = endEl.getBoundingClientRect();
+
+                // حساب نقطة المركز للعنصر البداية والنهاية
+                const startX = startRect.left + startRect.width / 2;
+                const startY = startRect.top + startRect.height / 2;
+                const endX = endRect.left + endRect.width / 2;
+                const endY = endRect.top + endRect.height / 2;
+
+                // إنشاء العملات المتعددة
+                for (let i = 0; i < numCoins; i++) {
+                    const coin = document.createElement('div');
+                    coin.className = 'floating-coin';
+                    coin.innerText = '🪙';
+                    
+                    // وضع العملة في نقطة البداية مبدئياً خارج الشاشة
+                    coin.style.left = startX + 'px';
+                    coin.style.top = startY + 'px';
+                    
+                    document.body.appendChild(coin);
+
+                    // استخدام setTimeout لإعطاء العملات تأخيراً بسيطاً بين كل واحدة
+                    setTimeout(() => {
+                        // إرسال العملة للهدف (النهاية)
+                        coin.style.left = endX + 'px';
+                        coin.style.top = endY + 'px';
+                        
+                        // تصغير وتخفية العملة في نهاية الحركة
+                        setTimeout(() => {
+                            coin.style.opacity = '0';
+                            coin.style.transform = 'scale(0.2)';
+                            
+                            // حذف العنصر من الـ DOM نهائياً
+                            setTimeout(() => coin.remove(), 800);
+                        }, 600); // 600ms تبدأ بعد 200ms من الحركة
+                        
+                    }, i * 100); // تأخير بين كل عملة وعملة (100ms)
+                }
             }
         };
 
@@ -1178,6 +1286,7 @@
 
         // ==================== التهيئة ====================
         function initGalaxy() {
+            // إضافة النجوم الأصلية للتحرك الرأسي
             for (let i=0; i<70; i++) {
                 const star = document.createElement('div');
                 star.className = 'real-star';
@@ -1188,7 +1297,78 @@
                 star.style.animationDelay = Math.random()*-15+'s';
                 document.body.appendChild(star);
             }
+            
+            // إضافة منطق التفاعل مع الماوس/اللمس للنجوم التفاعلية
+            document.body.addEventListener('mousemove', function(e) {
+                // تفعيل التفاعل فقط إذا كان الكلاس موجوداً
+                if (!document.body.classList.contains('interactive-galaxy')) return;
+                
+                const allStars = document.querySelectorAll('.real-star');
+                const mouseX = e.clientX;
+                const mouseY = e.clientY;
+                
+                allStars.forEach(star => {
+                    const rect = star.getBoundingClientRect();
+                    const starX = rect.left + rect.width / 2;
+                    const starY = rect.top + rect.height / 2;
+                    
+                    // حساب المسافة بين النجمة ومكان الماوس
+                    const distX = mouseX - starX;
+                    const distY = mouseY - starY;
+                    const dist = Math.sqrt(distX*distX + distY*distY);
+                    
+                    // إذا كان الماوس قريباً، نجعل النجمة "تهرب" لمسافة صغيرة جداً
+                    if (dist < 80) { // نصف قطر التأثير (pixels)
+                        const power = (80 - dist) / 80; // شدة الهروب (0 to 1)
+                        const moveX = distX * power * 0.1; // لمسة هروب خفيفة جداً ورأسية للأعلى
+                        const moveY = distY * power * 0.1;
+                        
+                        // نغير موقع النجمة مؤقتاً بالـ transform
+                        star.style.transform = `translate(${moveX}px, ${moveY}px)`;
+                        
+                        // إعادة النجمة لمكانها الأصلي بعد فترة بسيطة جداً
+                        setTimeout(() => {
+                             if (dist >= 80) { // تأكد أن الماوس خرج من المنطقة
+                                 star.style.transform = 'translate(0, 0)';
+                             }
+                        }, 200);
+                    } else {
+                        // إذا خرج الماوس، تعود لمكانها
+                        star.style.transform = 'translate(0, 0)';
+                    }
+                });
+            });
+            
+            // نفس المنطق للمس (Touch) للأجهزة المحمولة
+            document.body.addEventListener('touchmove', function(e) {
+                if (!document.body.classList.contains('interactive-galaxy')) return;
+                
+                const allStars = document.querySelectorAll('.real-star');
+                const touch = e.touches[0];
+                const mouseX = touch.clientX;
+                const mouseY = touch.clientY;
+                
+                allStars.forEach(star => {
+                    // (نفس منطق mousemove تماماً هنا)
+                    const rect = star.getBoundingClientRect();
+                    const starX = rect.left + rect.width / 2;
+                    const starY = rect.top + rect.height / 2;
+                    const distX = mouseX - starX;
+                    const distY = mouseY - starY;
+                    const dist = Math.sqrt(distX*distX + distY*distY);
+                    if (dist < 80) {
+                        const power = (80 - dist) / 80;
+                        const moveX = distX * power * 0.1;
+                        const moveY = distY * power * 0.1;
+                        star.style.transform = `translate(${moveX}px, ${moveY}px)`;
+                        setTimeout(() => star.style.transform = 'translate(0, 0)', 200);
+                    } else {
+                        star.style.transform = 'translate(0, 0)';
+                    }
+                });
+            }, { passive: true }); // passive للأداء الجيد للمس الرأسي والأفقي
         }
+        
         window.onload = () => { initGalaxy(); navigation.to('landing'); };
     </script>
 </body>
